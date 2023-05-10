@@ -37,6 +37,11 @@ class Post(models.Model):
     image = models.ImageField(
         upload_to='posts/images/', null=True, blank=True)
 
+    class Meta:
+        """Класс для определения метаданных модели."""
+
+        ordering = ['author', ]
+
     def __str__(self):
         """Возвращает строковое представление объекта Post."""
         return (
