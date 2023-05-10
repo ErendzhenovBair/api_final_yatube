@@ -10,6 +10,7 @@ from .serializers import (
 
 
 class PostViewSet(viewsets.ModelViewSet):
+    """Viewset для работы с постами"""
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     permission_classes = [IsAuthorOrReadOnly, ]
@@ -20,12 +21,14 @@ class PostViewSet(viewsets.ModelViewSet):
 
 
 class GroupViewSet(viewsets.ReadOnlyModelViewSet):
+    """Viewset для работы с группами"""
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
 
 
 class CommentViewSet(viewsets.ModelViewSet):
+    """Viewset для работы с комментариями"""
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = [
@@ -43,6 +46,7 @@ class CommentViewSet(viewsets.ModelViewSet):
 
 
 class FollowViewSet(viewsets.ModelViewSet):
+    """Viewset для работы с подписками"""
     serializer_class = FollowSerializer
     permission_classes = [IsAuthenticated, ]
     filter_backends = (filters.SearchFilter,)

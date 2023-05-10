@@ -4,6 +4,7 @@ CANNOT_UPDATE_OTHER_CONTENT = 'Изменение чужого контента 
 
 
 class IsAuthorOrReadOnly(permissions.BasePermission):
+    """Разрешение для редактирования только автором или чтения для всех"""
     message = CANNOT_UPDATE_OTHER_CONTENT
 
     def has_permission(self, request, view):
