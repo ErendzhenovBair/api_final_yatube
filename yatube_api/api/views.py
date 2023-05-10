@@ -1,14 +1,14 @@
 """Модуль, содержащий вьюсеты приложения api."""
 
 from django.shortcuts import get_object_or_404
-from rest_framework import filters, permissions, viewsets
+from rest_framework import filters, mixins, permissions, viewsets
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticated
 
 from .permissions import IsAuthorOrReadOnly
-from posts.models import Comment, Follow, Group, Post, User
-from .serializers import (
-    CommentSerializer, FollowSerializer, GroupSerializer, PostSerializer)
+from posts.models import Comment, Follow, Group, Post
+from .serializers import CommentSerializer, FollowSerializer
+from .serializers import GroupSerializer, PostSerializer
 
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -16,7 +16,8 @@ class PostViewSet(viewsets.ModelViewSet):
 
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    permission_classes = [IsAuthorOrReadOnly, ]
+    permission_classes = [
+        IsAuthorOrReadOnly, permissions.IsAuthenticatedOrReadOnly]
     pagination_class = LimitOffsetPagination
 
     def perform_create(self, serializer):
@@ -54,7 +55,8 @@ class CommentViewSet(viewsets.ModelViewSet):
         return self.get_post().comments.all()
 
 
-class FollowViewSet(viewsets.ModelViewSet):
+class FollowViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
+                    viewsets.GenericViewSet):
     """Viewset для работы с подписками."""
 
     queryset = Follow.objects.all()
@@ -65,10 +67,8 @@ class FollowViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         """Получение всех подписок текущего пользователя."""
-        return Follow.objects.filter(user=self.request.user)
+        return self.request.user.follower.all()
 
     def perform_create(self, serializer):
         """Создание новой подписки."""
-        serializer.is_valid()
-        following = User.objects.get(username=self.request.data['following'])
-        serializer.save(user=self.request.user, following=following)
+        serializer.save(user=self.request.user)

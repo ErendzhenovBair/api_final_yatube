@@ -40,7 +40,7 @@ class Post(models.Model):
     class Meta:
         """Класс для определения метаданных модели."""
 
-        ordering = ['author', ]
+        ordering = ['author', '-pub_date']
 
     def __str__(self):
         """Возвращает строковое представление объекта Post."""

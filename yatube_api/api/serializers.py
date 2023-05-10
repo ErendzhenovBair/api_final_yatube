@@ -11,7 +11,6 @@ from posts.models import Comment, Follow, Group, Post
 
 User = get_user_model()
 
-FOLLOWING_NOT_FOUND_ERROR = 'username в following не найден'
 SELF_FOLLOW_ERROR = 'Нельзя подписаться на самого себя'
 
 
@@ -78,15 +77,7 @@ class FollowSerializer(serializers.ModelSerializer):
     ]
 
     def validate_following(self, value):
-        """
-        Проверяет наличие пользователя, на которого пытаются подписаться.
-
-        Проверяет, что это не текущий пользователь.
-
-        """
-        following = User.objects.filter(username=value).first()
-        if not following:
-            raise ValidationError(FOLLOWING_NOT_FOUND_ERROR)
-        elif following == self.context['request'].user:
+        """Проверяет, что это не текущий пользователь."""
+        if value == self.context['request'].user:
             raise ValidationError(SELF_FOLLOW_ERROR)
-        return following
+        return value
