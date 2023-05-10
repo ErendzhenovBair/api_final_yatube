@@ -5,6 +5,7 @@ import sys
 
 
 def main():
+    """Инициализирует настройки и запускает выполнение командной строки."""
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'yatube_api.settings')
     try:
         from django.core.management import execute_from_command_line

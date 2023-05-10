@@ -1,3 +1,5 @@
+"""Модуль, содержащий модели для приложения posts."""
+
 from django.contrib.auth import get_user_model
 from django.db import models
 
@@ -6,15 +8,20 @@ User = get_user_model()
 
 
 class Group(models.Model):
+    """Модель группы для постов."""
+
     title = models.CharField(max_length=200)
     slug = models.SlugField(unique=True)
     description = models.TextField()
 
     def __str__(self):
+        """Возвращает строковое представление объекта Group."""
         return self.title
 
 
 class Post(models.Model):
+    """Модель поста."""
+
     text = models.TextField()
     pub_date = models.DateTimeField('Дата публикации', auto_now_add=True)
     author = models.ForeignKey(
@@ -31,6 +38,7 @@ class Post(models.Model):
         upload_to='posts/images/', null=True, blank=True)
 
     def __str__(self):
+        """Возвращает строковое представление объекта Post."""
         return (
             f"Post '{self.text[:20]}' by {self.author.username} "
             f"({self.pub_date})"
@@ -38,6 +46,8 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
+    """Модель комментария."""
+
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='comments')
     post = models.ForeignKey(
@@ -48,6 +58,8 @@ class Comment(models.Model):
 
 
 class Follow(models.Model):
+    """Модель подписки на авторов постов."""
+
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -62,6 +74,8 @@ class Follow(models.Model):
     )
 
     class Meta:
+        """Класс для определения метаданных модели."""
+
         verbose_name_plural = 'Подписки'
         verbose_name = 'Подписка'
         constraints = [
@@ -72,4 +86,5 @@ class Follow(models.Model):
         ]
 
     def __str__(self):
+        """Возвращает строковое представление объекта Follow."""
         return f'{self.user} подписался на {self.following}'
