@@ -1,4 +1,4 @@
-"""Модуль с разрешением IsAuthorOrReadOnly для работы с API."""
+"""Модуль, описывающий разрешения для работы с API."""
 from rest_framework import permissions
 
 CANNOT_UPDATE_OTHER_CONTENT = 'Изменение чужого контента запрещено!'
